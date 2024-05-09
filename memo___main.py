@@ -43,13 +43,20 @@ def show_data():
 
 
 def check_result():
-   pass
+   correct = answer.isChecked()
+   if correct:
+      lb_Result.setText(text_correct)
+      show_result()
+   else:
+      incorrect = wrong_answer1.isChecked() or wrong_answer2.isChecked() or wrong_answer3.isChecked()
+      lb_Result.setText(text_wrong)
+      show_result()
 
 
 def click_OK(self):
    # поки що перевіряємо питання, якщо ми в режимі питання, інакше нічого
    if btn_OK.text() != 'Наступне питання':
-       check_result()
+      check_result()
 
 
 win_card = QWidget()
