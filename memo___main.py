@@ -1,17 +1,57 @@
 from memo_card_layout import (
-   app, layout_card,
+   app, layout_card,box_Minutes,btn_Sleep,btn_Menu,
    lb_Question, lb_Correct, lb_Result,
    rbtn_1, rbtn_2, rbtn_3, rbtn_4,
    btn_OK, show_question, show_result
 )
 from PyQt5.QtWidgets import QWidget, QApplication
-from random import shuffle # перемішуватимемо відповіді у картці питання
+from random import choice, shuffle # перемішуватимемо відповіді у картці питання
+from time import sleep
+from memo_menu_window import*
+
+
+
+class Question():
+   def __init__(self, question, answer, wrong_answer_1, wrong_answer_2, wrong_answer_3, correct = 0, attempts = 0 ):
+      self.question = question
+      self.answer = answer
+      self.wrong_answer_1 = wrong_answer_1
+      self.wrong_answer_2 = wrong_answer_2
+      self.wrong_answer_3 = wrong_answer_3
+      self.correct = correct
+      self.attempts = attempts
+    
+   def got_right(self):
+      print("Це правильна відповідь!")
+      self.correct += 1
+      self.attempts += 1
+    
+   def got_wrong(self):
+      print("Відповідь невірна!")
+      self.attempts += 1
+
+
+q1 = Question('Яблоко','apple','application','building','caterpillar')
+q2 = Question('Дім','house','horse','hour','harry')
+q3 = Question('Миша','mouse','mouth','miracle','museum')
+q4 = Question('Число','number','plus','minus','amount')
+
+
+question = [q1,q2,q3,q4]
+
+def new_question():
+   global cur_q
+   cur_q = choice(question)
+   lb_Question.setText(cur_q.question)
+   
+
+
+
 
 
 card_width, card_height = 600, 500 # початкові розміри вікна "картка"
 text_wrong = 'Неправильно'
 text_correct = 'Правильно'
-
 
 # у цій версії напишемо в коді одне запитання та відповіді до нього
 # відповідні змінні поля майбутнього об'єкта "form" (тобто. анкета)
@@ -57,6 +97,31 @@ def click_OK(self):
    # поки що перевіряємо питання, якщо ми в режимі питання, інакше нічого
    if btn_OK.text() != 'Наступне питання':
       check_result()
+
+
+def rest():
+   win_card.hide()
+   n = box_Minutes.value() * 60
+   sleep(n)
+   win_card.show()
+
+btn_Sleep.clicked.connect(rest)
+
+
+
+####################
+def menu_generation():
+   menu_win.show()
+   win_card.hide()
+
+
+btn_Menu.clicked.connect(menu_generation)
+#
+
+def back_menu():
+   menu_win.hide()
+   win_card.show()
+btn_back.clicked.connect(back_menu)
 
 
 win_card = QWidget()
