@@ -87,14 +87,23 @@ layout_card.addStretch(1)
 layout_card.setSpacing(5) # прогалини між вмістом
 
 
-# Результат роботи цього модуля: віджети розміщені всередині layout_card, який можна призначити вікну.
-
 
 def show_result():
-   pass
+   RadioGroupBox.hide()
+   AnsGroupBox.show()
+   btn_OK.setText('Наступне питання')
 
 def show_question():
-   pass
+   RadioGroupBox.show()
+   AnsGroupBox.hide()
+   btn_OK.setText('Відповісти')
+   RadioGroup.setExclusive(False)
+   rbtn_1.setChecked(False)
+   rbtn_2.setChecked(False)
+   rbtn_3.setChecked(False)
+   rbtn_4.setChecked(False)
+   RadioGroup.setExclusive(True)
+
 
 
 
