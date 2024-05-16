@@ -1,111 +1,79 @@
-''' Вікно для картки питання '''
+from PyQt5.QtWidgets import  QApplication, QWidget, QHBoxLayout, QVBoxLayout, QGroupBox,\
+    QButtonGroup, QRadioButton, QPushButton, QLabel, QSpinBox
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (
-        QApplication, QWidget, 
-        QTableWidget, QListWidget, QListWidgetItem,
-        QLineEdit, QFormLayout,
-        QHBoxLayout, QVBoxLayout, 
-        QGroupBox, QButtonGroup, QRadioButton,  
-        QPushButton, QLabel, QSpinBox)
-from memo_app import app 
 
-app = QApplication([])
+window = QWidget()
 
-btn_Menu = QPushButton('Меню')
-btn_Sleep = QPushButton('Відпочити')
-box_Minutes = QSpinBox()
-box_Minutes.setValue(30)
-btn_OK = QPushButton('Відповісти')
-lb_Question = QLabel('')
+btn_menu = QPushButton('Меню')
+btn_rest = QPushButton('Відпочити')
+btn_next = QPushButton('Відповісти')
 
-RadioGroupBox = QGroupBox('Варіанти відповіді')
+rb_ans1 = QRadioButton("1")
+rb_ans2 = QRadioButton("2")
+rb_ans3 = QRadioButton("3")
+rb_ans4 = QRadioButton("4")
+
 RadioGroup = QButtonGroup()
+RadioGroup.addButton(rb_ans1)
+RadioGroup.addButton(rb_ans2)
+RadioGroup.addButton(rb_ans3)
+RadioGroup.addButton(rb_ans4)
 
-rbtn_1 = QRadioButton('')
-rbtn_2 = QRadioButton('')
-rbtn_3 = QRadioButton('')
-rbtn_4 = QRadioButton('')
+lb_question = QLabel('Запитання')
+lb_rest = QLabel('хвилин')
+lb_result = QLabel('Правильно')
+lb_right_answer = QLabel('відповідь')
 
-RadioGroup.addButton(rbtn_1)
-RadioGroup.addButton(rbtn_2)
-RadioGroup.addButton(rbtn_3)
-RadioGroup.addButton(rbtn_4)
+sp_rest = QSpinBox()
+sp_rest.setValue(30)
+gb_question = QGroupBox('Варіанти відповідей')
 
-AnsGroupBox = QGroupBox('Результати тесту')
-lb_Result = QLabel('')
-lb_Correct = QLabel('')
+rb_v1 = QVBoxLayout()
+rb_v2 = QVBoxLayout()
+rb_h1 = QHBoxLayout()
 
-layout_ans1 = QHBoxLayout()
-layout_ans2 = QVBoxLayout()
-layout_ans3 = QVBoxLayout()
+rb_v1.addWidget(rb_ans1)
+rb_v1.addWidget(rb_ans2)
+rb_v2.addWidget(rb_ans3)
+rb_v2.addWidget(rb_ans4)
 
-layout_ans2.addWidget(rbtn_1)
-layout_ans2.addWidget(rbtn_2)
+rb_h1.addLayout(rb_v1)
+rb_h1.addLayout(rb_v2)
 
-layout_ans3.addWidget(rbtn_3)
-layout_ans3.addWidget(rbtn_4)
+gb_question.setLayout(rb_h1)
 
-layout_ans1.addLayout(layout_ans2)
-layout_ans1.addLayout(layout_ans3)
+gb_answer = QGroupBox()
 
-RadioGroupBox.setLayout(layout_ans1)
+v1 = QVBoxLayout()
+v1.addWidget(lb_result, alignment=(Qt.AlignLeft | Qt.AlignTop))
+v1.addWidget(lb_right_answer,alignment=(Qt.AlignTop | Qt.AlignCenter))
+gb_answer.setLayout(v1)
 
-layout_res = QVBoxLayout()
-layout_res.addWidget(lb_Result, alignment=(Qt.AlignLeft | Qt.AlignTop))
+h1_main = QHBoxLayout()
+h2_main = QHBoxLayout()
+h3_main = QHBoxLayout()
+h4_main = QHBoxLayout()
+v1_main = QVBoxLayout()
 
-AnsGroupBox.setLayout(layout_res)
-AnsGroupBox.hide()
+h1_main.addWidget(btn_menu)
+h1_main.addStretch(1)
+h1_main.addWidget(btn_rest)
+h1_main.addWidget(sp_rest)
+h1_main.addWidget(lb_rest)
 
-layout_line1 = QHBoxLayout()
-layout_line2 = QHBoxLayout()
-layout_line3 = QHBoxLayout()
-layout_line4 = QHBoxLayout()
+h2_main.addWidget(lb_question, alignment=(Qt.AlignHCenter | Qt.AlignVCenter))
+h3_main.addWidget(gb_answer)
+h3_main.addWidget(gb_question)
+gb_answer.hide()
 
-layout_line1.addWidget(btn_Menu)
-layout_line1.addStretch(1)
+h4_main.addStretch(1)
+h4_main.addWidget(btn_next, stretch=2)
+h4_main.addStretch(1)
 
-layout_line1.addWidget(btn_Sleep)
-layout_line1.addWidget(box_Minutes)
-layout_line1.addWidget(QLabel('хвилин'))
-
-layout_line2.addWidget(lb_Question, alignment=(Qt.AlignCenter | Qt.AlignVCenter))
-layout_line3.addWidget(RadioGroupBox)
-layout_line3.addWidget(AnsGroupBox)
-
-layout_line4.addStretch(1)
-layout_line4.addWidget(btn_OK,stretch=2, alignment=(Qt.AlignVCenter))
-layout_line4.addStretch(1)
-
-layout_card = QVBoxLayout()
-
-layout_card.addLayout(layout_line1,stretch=1)
-layout_card.addLayout(layout_line2,stretch=2)
-layout_card.addLayout(layout_line3,stretch=8)
-layout_card.addStretch(1)
-layout_card.addLayout(layout_line4, stretch=1)
-layout_card.addStretch(1)
-layout_card.setSpacing(5) # прогалини між вмістом
-
-
-
-def show_result():
-   RadioGroupBox.hide()
-   AnsGroupBox.show()
-   btn_OK.setText('Наступне питання')
-
-def show_question():
-   RadioGroupBox.show()
-   AnsGroupBox.hide()
-   btn_OK.setText('Відповісти')
-   RadioGroup.setExclusive(False)
-   rbtn_1.setChecked(False)
-   rbtn_2.setChecked(False)
-   rbtn_3.setChecked(False)
-   rbtn_4.setChecked(False)
-   RadioGroup.setExclusive(True)
-
-
-
-
-
-
+v1_main.addLayout(h1_main, stretch=1)
+v1_main.addLayout(h2_main, stretch=2)
+v1_main.addLayout(h3_main, stretch=8)
+v1_main.addLayout(h4_main)
+v1_main.setSpacing(5)
+window.setLayout(v1_main)
+window.resize(550, 450)
