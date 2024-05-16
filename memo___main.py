@@ -1,140 +1,137 @@
-from memo_card_layout import (
-   app, layout_card,box_Minutes,btn_Sleep,btn_Menu,
-   lb_Question, lb_Correct, lb_Result,
-   rbtn_1, rbtn_2, rbtn_3, rbtn_4,
-   btn_OK, show_question, show_result
-)
-from PyQt5.QtWidgets import QWidget, QApplication
-from random import choice, shuffle # перемішуватимемо відповіді у картці питання
+from random import choice, shuffle
 from time import sleep
-from memo_menu_window import*
+from PyQt5.QtWidgets import QApplication
 
+app = QApplication([])
 
+from memo_card_layout import *
+from memo_menu_window import *
 
-class Question():
-   def __init__(self, question, answer, wrong_answer_1, wrong_answer_2, wrong_answer_3, correct = 0, attempts = 0 ):
+class Question:
+   def __init__(self, question, answer, wrong_answer1, wrong_answer2, wrong_answer3):
       self.question = question
       self.answer = answer
-      self.wrong_answer_1 = wrong_answer_1
-      self.wrong_answer_2 = wrong_answer_2
-      self.wrong_answer_3 = wrong_answer_3
-      self.correct = correct
-      self.attempts = attempts
-    
+      self.wrong_answer1 = wrong_answer1
+      self.wrong_answer2 = wrong_answer2
+      self.wrong_answer3 = wrong_answer3
+      self.isAsking = True
+      self.count_ask = 0
+      self.count_right = 0
    def got_right(self):
-      print("Це правильна відповідь!")
-      self.correct += 1
-      self.attempts += 1
-    
+      self.count_ask += 1
+      self.count_right += 1
    def got_wrong(self):
-      print("Відповідь невірна!")
-      self.attempts += 1
+      self.count_ask += 1
 
 
-q1 = Question('Яблоко','apple','application','building','caterpillar')
-q2 = Question('Дім','house','horse','hour','harry')
-q3 = Question('Миша','mouse','mouth','miracle','museum')
-q4 = Question('Число','number','plus','minus','amount')
+q1 = Question('Яблуко', 'apple', 'application', 'pinapple', 'apply')
+q2 = Question('Дім', 'house', 'horse', 'hurry', 'hour')
+q3 = Question('Миша', 'mouse', 'mouth', 'muse', 'museum')
+q4 = Question('Число', 'number', 'digit', 'amount', 'summary')
 
 
-question = [q1,q2,q3,q4]
+radio_buttons = [rb_ans1, rb_ans2, rb_ans3, rb_ans4]
+questions = [q1, q2, q3, q4]
 
 def new_question():
    global cur_q
-   cur_q = choice(question)
-   lb_Question.setText(cur_q.question)
-   
+   cur_q = choice(questions)
+   lb_question.setText(cur_q.question)
+   lb_right_answer.setText(cur_q.answer)
+   shuffle(radio_buttons)
+
+   radio_buttons[0].setText(cur_q.wrong_answer1)
+   radio_buttons[1].setText(cur_q.wrong_answer2)
+   radio_buttons[2].setText(cur_q.wrong_answer3)
+   radio_buttons[3].setText(cur_q.answer)
+
+new_question()
 
 
-
-
-
-card_width, card_height = 600, 500 # початкові розміри вікна "картка"
-text_wrong = 'Неправильно'
-text_correct = 'Правильно'
-
-# у цій версії напишемо в коді одне запитання та відповіді до нього
-# відповідні змінні поля майбутнього об'єкта "form" (тобто. анкета)
-frm_question = 'Яблуко'
-frm_right = 'apple'
-frm_wrong1 = 'application'
-frm_wrong2 = 'building'
-frm_wrong3 = 'caterpillar'
-
-
-# Тепер нам потрібно показати ці дані,
-# причому відповіді розподілити випадково між радіокнопками, і пам'ятати кнопку з правильною відповіддю.
-# Для цього створимо набір посилань на радіокнопки та перемішаємо його
-radio_list = [rbtn_1, rbtn_2, rbtn_3, rbtn_4]
-shuffle(radio_list)
-answer = radio_list[0] # ми не знаємо, який це з радіобаттонів, але можемо покласти сюди правильну відповідь і запам'ятати це
-wrong_answer1, wrong_answer2, wrong_answer3 = radio_list[1], radio_list[2], radio_list[3]
-
-
-def show_data():
-   ''' показує потрібну інформацію на екрані '''
-   # об'єднаємо у функцію схожі дії
-   lb_Question.setText(frm_question)
-   lb_Correct.setText(frm_right)
-   answer.setText(frm_right)
-   wrong_answer1.setText(frm_wrong1)
-   wrong_answer2.setText(frm_wrong2)
-   wrong_answer3.setText(frm_wrong3)
-
-
-def check_result():
-   correct = answer.isChecked()
-   if correct:
-      lb_Result.setText(text_correct)
-      show_result()
+def check():
+   RadioGroup.setExclusive(False)
+   for answer in radio_buttons:
+      if answer.isChecked():
+         if answer.text() == lb_right_answer.text():
+            cur_q.got_right()
+            lb_result.setText('Вірно!')
+            answer.setChecked(False)
+            break
    else:
-      incorrect = wrong_answer1.isChecked() or wrong_answer2.isChecked() or wrong_answer3.isChecked()
-      lb_Result.setText(text_wrong)
-      show_result()
+      lb_result.setText('Не вірно!')
+      cur_q.got_wrong()
+
+   RadioGroup.setExclusive(True)
 
 
-def click_OK(self):
-   # поки що перевіряємо питання, якщо ми в режимі питання, інакше нічого
-   if btn_OK.text() != 'Наступне питання':
-      check_result()
 
+def click_ok():
+   if btn_next.text() == 'Відповісти':
+      check()
+      gb_question.hide()
+      gb_answer.show()
+
+      btn_next.setText('Наступне запитання')
+   else:
+      new_question()
+      gb_question.show()
+      gb_answer.hide()
+
+      btn_next.setText('Відповісти')
+
+
+btn_next.clicked.connect(click_ok)
 
 def rest():
-   win_card.hide()
-   n = box_Minutes.value() * 60
+   window.hide()
+   n = sp_rest.value() * 60
    sleep(n)
-   win_card.show()
-
-btn_Sleep.clicked.connect(rest)
+   window.show()
 
 
+btn_rest.clicked.connect(rest)
 
-####################
 def menu_generation():
+   if cur_q.count_ask == 0:
+      c = 0
+   else:
+      c = (cur_q.count_right/cur_q.count_ask)*100
+
+   text = f'Разів відповіли: {cur_q.count_ask}\n' \
+         f'Вірних відповідей: {cur_q.count_right}\n' \
+         f'Успішність: {round(c, 2)}%'
+   lb_statistic.setText(text)
    menu_win.show()
-   win_card.hide()
+   window.hide()
 
-
-btn_Menu.clicked.connect(menu_generation)
-#
+btn_menu.clicked.connect(menu_generation)
 
 def back_menu():
    menu_win.hide()
-   win_card.show()
+   window.show()
+
 btn_back.clicked.connect(back_menu)
 
+def clear():
+   le_question.clear()
+   le_right_ans.clear()
+   le_wrong_ans1.clear()
+   le_wrong_ans2.clear()
+   le_wrong_ans3.clear()
 
-win_card = QWidget()
-win_card.resize(card_width, card_height)
-win_card.move(300, 300)
-win_card.setWindowTitle('Memory Card')
-
-
-win_card.setLayout(layout_card)
-show_data()
-show_question()
-btn_OK.clicked.connect(click_OK)
+btn_clear.clicked.connect(clear)
 
 
-win_card.show()
+def add_question():
+   new_q = Question(le_question.text(), le_right_ans.text(),
+                     le_wrong_ans1.text(), le_wrong_ans2.text(),
+                     le_wrong_ans3.text())
+
+   questions.append(new_q)
+   clear()
+
+btn_add_question.clicked.connect(add_question)
+
+
+window.show()
 app.exec_()
