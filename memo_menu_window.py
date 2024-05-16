@@ -1,15 +1,16 @@
 from PyQt5.QtWidgets import (
-    QApplication, QWidget,
-    QLineEdit, QHBoxLayout,QVBoxLayout,
-    QPushButton, QLabel)
+    QApplication, QWidget, QLineEdit,
+    QHBoxLayout, QVBoxLayout, QPushButton, QLabel
+)
+
 
 menu_win = QWidget()
 
-lb_quest = QLabel('Введіть питання:')
-lb_right_ans = QLabel('Введіть вірну відповіть:')
-lb_wrong_ans1 = QLabel('Введіть першу хибну відповіть:')
-lb_wrong_ans2 = QLabel('Введіть другу хибну відповіть:')
-lb_wrong_ans3 = QLabel('Введіть третю хибну відповіть:')
+lb_quest = QLabel('Введіть запитання:')
+lb_right_ans = QLabel('Введіть вірну відповідь:')
+lb_wrong_ans1 = QLabel('Введіть першу хибну відповідь')
+lb_wrong_ans2 = QLabel('Введіть другу хибну відповідь')
+lb_wrong_ans3 = QLabel('Введіть третю хибну відповідь')
 
 le_question = QLineEdit()
 le_right_ans = QLineEdit()
@@ -43,13 +44,11 @@ hl_question.addLayout(vl_lineEdits)
 btn_back = QPushButton('Назад')
 btn_add_question = QPushButton('Додати запитання')
 btn_clear = QPushButton('Очистити')
-
 hl_buttons = QHBoxLayout()
 hl_buttons.addWidget(btn_add_question)
 hl_buttons.addWidget(btn_clear)
 
 vl_res = QVBoxLayout()
-
 vl_res.addLayout(hl_question)
 vl_res.addLayout(hl_buttons)
 vl_res.addWidget(lb_header_stat)
@@ -57,5 +56,4 @@ vl_res.addWidget(lb_statistic)
 vl_res.addWidget(btn_back)
 
 menu_win.setLayout(vl_res)
-
-menu_win.resize(400,300)
+menu_win.resize(400, 300)
